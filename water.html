@@ -1,0 +1,105 @@
+<html>
+	<head>
+		<title>Procgen water surface</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.js"></script>
+		<script src="perlin.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 100 );
+			camera.position.z = 15;
+			camera.position.y = 2;
+			noise.seed(Math.random());
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			//create a blue LineBasicMaterial
+			var material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+
+			// *----*----*
+			// |    |    |
+			// *----*----*
+			// |    |    |
+			// *----*----* Create vertices
+
+			var vertices = [
+				[-5.0, 0.0, 5.0], //0
+				 [0.0, 0.0, 5.0], //1
+				 [5.0, 0.0, 5.0], //2
+				 [-5.0, 0.0, 0.0], //3
+				 [0.0, 0.0, 0.0], //4
+				 [5.0, 0.0, 0.0], //5
+				[-5.0, 0.0, -5.0], //6
+				 [0.0, 0.0, -5.0], //7
+				 [5.0, 0.0, -5.0] //8
+			];
+
+			var backLR = new THREE.Geometry();
+			backLR.vertices.push(new THREE.Vector3(vertices[0][0],vertices[0][0],vertices[0][2]));
+			backLR.vertices.push(new THREE.Vector3(vertices[1][0],vertices[0][0],vertices[1][2]));
+			backLR.vertices.push(new THREE.Vector3(vertices[2][0],vertices[0][0],vertices[2][2]));
+			var midLR = new THREE.Geometry();
+			midLR.vertices.push(new THREE.Vector3(vertices[3][0],vertices[0][0],vertices[3][2]));
+			midLR.vertices.push(new THREE.Vector3(vertices[4][0],vertices[0][0],vertices[4][2]));
+			midLR.vertices.push(new THREE.Vector3(vertices[5][0],vertices[0][0],vertices[5][2]));
+			var frontLR = new THREE.Geometry();
+			frontLR.vertices.push(new THREE.Vector3(vertices[6][0],vertices[0][0],vertices[6][2]));
+			frontLR.vertices.push(new THREE.Vector3(vertices[7][0],vertices[0][0],vertices[7][2]));
+			frontLR.vertices.push(new THREE.Vector3(vertices[8][0],vertices[0][0],vertices[8][2]));
+			var leftBF = new THREE.Geometry();
+			leftBF.vertices.push(new THREE.Vector3(vertices[0][0],vertices[0][0],vertices[0][2]));
+			leftBF.vertices.push(new THREE.Vector3(vertices[3][0],vertices[0][0],vertices[3][2]));
+			leftBF.vertices.push(new THREE.Vector3(vertices[6][0],vertices[0][0],vertices[6][2]));
+			var midBF = new THREE.Geometry();
+			midBF.vertices.push(new THREE.Vector3(vertices[1][0],vertices[0][0],vertices[1][2]));
+			midBF.vertices.push(new THREE.Vector3(vertices[4][0],vertices[0][0],vertices[4][2]));
+			midBF.vertices.push(new THREE.Vector3(vertices[7][0],vertices[0][0],vertices[7][2]));
+			var rightBF = new THREE.Geometry();
+			rightBF.vertices.push(new THREE.Vector3(vertices[2][0],vertices[0][0],vertices[2][2]));
+			rightBF.vertices.push(new THREE.Vector3(vertices[5][0],vertices[0][0],vertices[5][2]));
+			rightBF.vertices.push(new THREE.Vector3(vertices[8][0],vertices[0][0],vertices[8][2]));
+
+			//create lines using vertices and material
+			var backLRline = new THREE.Line(backLR, material);
+			var midLRline = new THREE.Line(midLR, material);
+			var frontLRline = new THREE.Line(frontLR, material);
+			var leftBFline = new THREE.Line(leftBF, material);
+			var midBFline = new THREE.Line(midBF, material);
+			var rightBFline = new THREE.Line(rightBF, material);
+
+			scene.add(backLRline);
+			scene.add(midLRline);
+			scene.add(frontLRline);
+			scene.add(leftBFline);
+			scene.add(midBFline);
+			scene.add(rightBFline);
+
+			function getNoiseArray() {
+				values = new Array();
+				var maxSize = 3;
+				for (var y = 0; y < maxSize; y++) {
+					for (var x = 0; x < maxSize; x++) {
+						var nx = x/maxSize - 0.5, ny = y/maxSize - 0.5;
+						values.push(noise.perlin2(nx, ny));
+						console.log(value[x]);
+					}
+				}
+				return values;
+			}
+
+			var animate = function () {
+				requestAnimationFrame( animate );
+				renderer.clear();
+				renderer.render(scene, camera);
+			};
+			animate();
+		</script>
+	</body>
+</html>
